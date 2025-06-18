@@ -11,7 +11,6 @@ class QueryOutput(TypedDict):
     query: Annotated[str, "Syntactically valid SQL query."]
 
 class SQLQueryGraph:
-    unsafeMessage = "A consulta foi considerada insegura e não será executada."
     def __init__(self, chat, db):
         self.chat = chat
         self.db = db
@@ -22,7 +21,7 @@ class SQLQueryGraph:
         q_upper = query.upper()
         isSafe = all(keyword not in q_upper for keyword in ["DROP", "DELETE", "UPDATE", "INSERT", "CREATE"])
         if not isSafe:
-            return {"answer": self.unsafeMessage}
+            return {"answer": Prompts.unsafeMessage}
         return state
 
     def prompt_template(self,):
@@ -65,7 +64,7 @@ class SQLQueryGraph:
 
     def is_query_blocked(state):
         print(state.get('answer', 'abacaxi'))
-        return "answer" in state and SQLQueryGraph.unsafeMessage == state["answer"]
+        return "answer" in state and Prompts.unsafeMessage == state["answer"]
 
     def build_sql_graph(self):
         """Method to create the Graph chain."""

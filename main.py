@@ -4,7 +4,7 @@ from langchain_openai import ChatOpenAI
 from langchain.chat_models import init_chat_model
 from langchain_community.utilities import SQLDatabase
 from langchain_core.prompts import ChatPromptTemplate
-from agents.sql_agent import create_sql_agent, memoryConfig
+from agents.sql_agent import create_sql_agent_with_safety, memoryConfig
 from chains.sql_query_graph import SQLQueryGraph
 from config.db_settings import get_settings
 from db.connection import get_database
@@ -17,7 +17,7 @@ def main():
     dbSettings = get_settings()
     db = get_database(dbSettings)
     graph = SQLQueryGraph(chat, db).build_sql_graph()
-    SQLAgent = create_sql_agent(db, chat)
+    SQLAgent = create_sql_agent_with_safety(db, chat)
     print("---Iniciando SQL Agent---")
     while True:
         pergunta = input("Pergunta: ")

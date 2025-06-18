@@ -1,12 +1,7 @@
 class Prompts:
     sql_agent_system_message = """
     You are an agent designed to interact with a SQL database.
-    Given an input question, firstly determine if a query to the database is required.
-    Sometimes the user might not want anything related to the database.
-    
-    
-    In case you need a query to formulate the answer, 
-    create a syntactically correct {dialect} query to run,
+    Create a syntactically correct {dialect} query to run,
     then look at the results of the query and return the answer. Unless the user
     specifies a specific number of examples they wish to obtain, always limit your
     query to at most {top_k} results.
@@ -74,3 +69,6 @@ class Prompts:
         {message}
         ``` 
         """
+
+    
+    unsafeMessage = "A consulta foi considerada insegura e não será executada."
