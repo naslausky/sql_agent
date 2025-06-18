@@ -3,100 +3,85 @@ from langgraph.graph import StateGraph, START
 from langchain_core.output_parsers import StrOutputParser
 from langchain_community.tools.sql_database.tool import QuerySQLDatabaseTool
 from langchain_core.prompts import ChatPromptTemplate
+from agents.sql_agent import create_sql_agent_with_safety, memoryConfig
 from prompts.prompts import Prompts
-from .state import State
+from .state import SQLChatBotGraphState
 
 class QueryOutput(TypedDict):
     """Generated SQL query."""
     query: Annotated[str, "Syntactically valid SQL query."]
 
-class SQLQueryGraph:
+class SQLChatBotGraph:
     """
-    Class to show a default sql query graph without any premade agents.
+    Graph with custom chat and validation with an SQLAgent node.
     """
     def __init__(self, chat, db):
         self.chat = chat
         self.db = db
+        self.sqlAgent = create_sql_agent_with_safety(db, chat)
 
-    def check_query_safety(self, state: State) -> bool:
-        """Helper function to determine if a query is safe."""
-        query = state["query"]
-        q_upper = query.upper()
-        isSafe = all(keyword not in q_upper for keyword in ["DROP", "DELETE", "UPDATE", "INSERT", "CREATE"])
-        if not isSafe:
-            return {"answer": Prompts.unsafeMessage}
+    def get_user_input(self, state: SQLChatBotGraphState) -> SQLChatBotGraphState:
+        """
+        LangGraph node to receive user input.
+        """
+        pergunta = input("Pergunta: ")
+        state["user_input"] = pergunta
+        return state
+    
+    def check_exit_intent(self, state: SQLChatBotGraphState) -> SQLChatBotGraphState:
+        pergunta = state["user_input"]
+        should_end_response = self.chat.invoke(Prompts.should_end_conversation_prompt(pergunta)).content.lower()
+        state["should_end"] = "yes" in should_end_response
         return state
 
-    def prompt_template(self,):
-        """Method to obtain the graph prompt template"""
-        system_message = Prompts.graph_system_prompt 
-        user_prompt = "Question: {input}"
-        
-        query_prompt_template = ChatPromptTemplate(
-            [("system", system_message), ("user", user_prompt)]
-        )
-        return query_prompt_template
+    def run_sql_agent(self, state: SQLChatBotGraphState) -> SQLChatBotGraphState:
+        pergunta = state["user_input"]
+        content = self.sqlAgent.invoke({"messages": [{"role": "user", "content": pergunta}]}, memoryConfig)
+        state["response"] = content["messages"][-1].content
+        return state
 
+    def print_agent_answer(self, state: SQLChatBotGraphState) -> SQLChatBotGraphState:
+        resposta = state["response"]
+        print("Resposta:", resposta)
+        return state
 
-    def write_query(self, state: State):
-        """Generate SQL query to fetch information."""
-        prompt = self.prompt_template().invoke(
-            {
-                "dialect": self.db.dialect,
-                "top_k": 10,
-                "table_info": self.db.get_table_info(),
-                "input": state["question"],
-            }
-        )
-        structured_llm = self.chat.with_structured_output(QueryOutput)
-        result = structured_llm.invoke(prompt)
-        return {"query": result["query"]}
+    def end_conversation(self, state: SQLChatBotGraphState) -> SQLChatBotGraphState:
+        print("A conversa foi encerrada.")
+        return state
 
-    def execute_query(self, state: State):
-        """Execute SQL query."""
-        execute_query_tool = QuerySQLDatabaseTool(db=self.db)
-        return {"result": execute_query_tool.invoke(state["query"])}
+    def should_end_conversation(state):
+        return state.get("should_end", false)
 
-    def generate_answer(self, state: State):
-        """Answer question using retrieved information as context."""
-        if SQLQueryGraph.is_query_blocked(state):
-            return state
-        prompt = Prompts.graph_prompt_formulate_answer(state)
-        response = self.chat.invoke(prompt)
-        return {"answer": response.content}
+    def build_sql_chatbot_graph(self):
+        """Method to create the Chatbot Graph."""
 
-    def is_query_blocked(state):
-        print(state.get('answer', 'abacaxi'))
-        return "answer" in state and Prompts.unsafeMessage == state["answer"]
+        graph_builder = StateGraph(SQLChatBotGraphState)
 
-    def build_sql_graph(self):
-        """Method to create the Graph chain."""
+        graph_builder.add_node("get_user_input", self.get_user_input)
+        graph_builder.add_node("check_exit_intent", self.check_exit_intent)
+        graph_builder.add_node("run_sql_agent", self.run_sql_agent)
+        graph_builder.add_node("print_agent_answer", self.print_agent_answer)
+        graph_builder.add_node("end_conversation", self.end_conversation)
 
-        graph_builder = StateGraph(State)
-
-        graph_builder.add_node("write_query", self.write_query)
-        graph_builder.add_node("check_query_safety", self.check_query_safety)
-        graph_builder.add_node("execute_query", self.execute_query)
-        graph_builder.add_node("generate_answer", self.generate_answer)
-
-        graph_builder.add_edge(START, "write_query")
-        graph_builder.add_edge("write_query", "check_query_safety")
+        graph_builder.add_edge(START, "get_user_input")
+        graph_builder.add_edge("get_user_input", "check_exit_intent")
 
         graph_builder.add_conditional_edges(
-            "check_query_safety",
-            SQLQueryGraph.is_query_blocked, 
+            "check_exit_intent",
+            SQLChatBotGraph.should_end_conversation, 
             {
-                True: "generate_answer",
-                False: "execute_query"
+                True: "end_conversation",
+                False: "run_sql_agent"
             }
         )
 
-        graph_builder.add_edge("execute_query", "generate_answer")
+        graph_builder.add_edge("run_sql_agent", "print_agent_answer")
+        graph_builder.add_edge("print_agent_answer", "get_user_input") 
         graph = graph_builder.compile()
         return graph
 
     def debugGraph(graph, initial_question): 
         for step in graph.stream(
-        {"question": initial_question}, stream_mode="updates"
-        ):
+            {"question": initial_question}, stream_mode="updates"
+            ):
             print(step)
