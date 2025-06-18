@@ -1,6 +1,6 @@
 from typing_extensions import TypedDict
 
-class State(TypedDict):
+class SQLQueryGraphState(TypedDict):
     question: str
     query: str
     result: str

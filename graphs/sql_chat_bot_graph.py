@@ -4,7 +4,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_community.tools.sql_database.tool import QuerySQLDatabaseTool
 from langchain_core.prompts import ChatPromptTemplate
 from prompts.prompts import Prompts
-from .sql_query_graph_state import SQLQueryGraphState as State
+from .state import State
 
 class QueryOutput(TypedDict):
     """Generated SQL query."""

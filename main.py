@@ -5,7 +5,7 @@ from langchain.chat_models import init_chat_model
 from langchain_community.utilities import SQLDatabase
 from langchain_core.prompts import ChatPromptTemplate
 from agents.sql_agent import create_sql_agent_with_safety, memoryConfig
-from chains.sql_query_graph import SQLQueryGraph
+from graphs.sql_query_graph import SQLQueryGraph
 from config.db_settings import get_settings
 from db.connection import get_database
 from llm.llm_provider import get_llm 
