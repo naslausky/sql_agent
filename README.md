@@ -15,7 +15,7 @@
    POSTGRES_DB={Nome do BD}
     ```
  - Lembre-se de adicionar suas próprias informações ao arquivo mencionado acima.
- - Para correta segurança da orquestração, certifique-se que o usuário do POSTGRESQL tenha permissões de **somente leitura**.
+ - O agente já contém seguranças contra validações, mas para correta orquestração, certifique-se que o usuário do POSTGRESQL tenha permissões de **somente leitura**.
  - Certifique-se que o banco de dados contenha as tabelas corretas:
    ```sql
     -- Tabela de clientes
