@@ -65,3 +65,12 @@ class Prompts:
         Only use the following tables:
         {table_info}
         """
+    def should_end_conversation_prompt(message):
+        return f"""
+        Given the following message, enclosed between triple backticks,
+        detect if the user wants to leave the conversation.
+        Answer this with ONLY "yes" or "no".
+        ```
+        {message}
+        ``` 
+        """

@@ -5,6 +5,7 @@ from langchain.agents.agent import RunnableAgent
 from prompts.prompts import Prompts
 
 
+memoryConfig = {"configurable": {"thread_id": "1"}}
 def create_sql_agent(db, chat):
     toolkit = SQLDatabaseToolkit(db=db, llm=chat)
     tools = toolkit.get_tools() + []
@@ -14,5 +15,4 @@ def create_sql_agent(db, chat):
     )
     memory = MemorySaver()
     agent_executor = create_react_agent(chat, tools, prompt=system_message, checkpointer = memory)
-    #agent_executor = create_react_agent(chat, tools, prompt=system_message,)
     return agent_executor
