@@ -1,6 +1,24 @@
 # SQL Agent
 > SQL Agent Inteligente utilizando Langflow e modelos de IA generativa.
 
+### Gif ilustrativo de funcionamento:
+![til](./docs/sql_agent.gif)
+
+### Requisitos essenciais:
+ - _"Criar um banco de dados PostgreSQL com tabelas inter-relacionadas"_:  
+    ✅ As tabelas criadas e população dos dados é mostrada em "**Como rodar**".
+ - _"Implementar um SQL Agent com LangChain para converter linguagem natural em SQL"_:  
+    ✅ Foi criado um agent ReAct para montar as queries e acessar o banco.
+ - _"Criar um fluxo com LangGraph para processar a consulta"_:  
+    ✅ O grafo foi criado para chamada do agente, validação de saída e loop de conversa.
+ - _"Executar a query gerada e retornar os resultados formatados"_:  
+    ✅ O proprio agent tem esse poder com base nas ferramentas fornecidas a ele.
+ - _"Garantir segurança contra SQL Injection e aplicar otimizações nas queries"_:  
+    ✅ Seguranças feitas:
+         1) A ferramenta de rodar as queries foi substituída por uma que valida as palavras perigosas.
+         2) O prompt do agent instrui para não fazer nenhum tipo de query desta forma.
+         3) Como última camada, o usuário de acesso ao banco de dados fornecido ao agente tem permissões de somente leitura.
+
 ### Como rodar:
  - Vá para a raiz do projeto.
  - Instale os requisitos:
