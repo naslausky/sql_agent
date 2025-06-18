@@ -11,14 +11,19 @@ class QueryOutput(TypedDict):
     query: Annotated[str, "Syntactically valid SQL query."]
 
 class SQLQueryGraph:
+    unsafeMessage = "A consulta foi considerada insegura e não será executada."
     def __init__(self, chat, db):
         self.chat = chat
         self.db = db
 
-    def is_query_safe(self, query: str) -> bool:
-        """Helper function to determine if a query is safe. Not being used as its part of"""
+    def check_query_safety(self, state: State) -> bool:
+        """Helper function to determine if a query is safe."""
+        query = state["query"]
         q_upper = query.upper()
-        return all(keyword not in q_upper for keyword in ["DROP", "DELETE", "UPDATE", "INSERT"])
+        isSafe = all(keyword not in q_upper for keyword in ["DROP", "DELETE", "UPDATE", "INSERT", "CREATE"])
+        if not isSafe:
+            return {"answer": self.unsafeMessage}
+        return state
 
     def prompt_template(self,):
         """Method to obtain the graph prompt template"""
@@ -52,18 +57,39 @@ class SQLQueryGraph:
 
     def generate_answer(self, state: State):
         """Answer question using retrieved information as context."""
+        if SQLQueryGraph.is_query_blocked(state):
+            return state
         prompt = Prompts.graph_prompt_formulate_answer(state)
         response = self.chat.invoke(prompt)
         return {"answer": response.content}
 
+    def is_query_blocked(state):
+        print(state.get('answer', 'abacaxi'))
+        return "answer" in state and SQLQueryGraph.unsafeMessage == state["answer"]
+
     def build_sql_graph(self):
         """Method to create the Graph chain."""
-        graph_builder = StateGraph(State).add_sequence(
-            [self.write_query, 
-            self.execute_query, 
-            self.generate_answer]
-        )
+
+        graph_builder = StateGraph(State)
+
+        graph_builder.add_node("write_query", self.write_query)
+        graph_builder.add_node("check_query_safety", self.check_query_safety)
+        graph_builder.add_node("execute_query", self.execute_query)
+        graph_builder.add_node("generate_answer", self.generate_answer)
+
         graph_builder.add_edge(START, "write_query")
+        graph_builder.add_edge("write_query", "check_query_safety")
+
+        graph_builder.add_conditional_edges(
+            "check_query_safety",
+            SQLQueryGraph.is_query_blocked, 
+            {
+                True: "generate_answer",
+                False: "execute_query"
+            }
+        )
+
+        graph_builder.add_edge("execute_query", "generate_answer")
         graph = graph_builder.compile()
         return graph
 
