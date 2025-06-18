@@ -47,7 +47,7 @@ class SecureSQLQueryTool(BaseTool):
             return Prompts.unsafe_message
         return self.db.run(query) 
 
-def create_sql_agent_with_safety(db, chat):
+def create_sql_agent_with_safety(db, chat, store, checkpointer):
     """
     Creates a SQL agent with safety validation for running queries.
     It replaces the default SQL tool that runs the SQL to a custom tool with validation.
@@ -62,5 +62,5 @@ def create_sql_agent_with_safety(db, chat):
         top_k=5,
     )
     memory = MemorySaver() 
-    agent_executor = create_react_agent(chat, safe_tools, prompt=system_message, checkpointer=memory)
+    agent_executor = create_react_agent(chat, safe_tools, prompt=system_message, checkpointer=checkpointer, store=store)
     return agent_executor
