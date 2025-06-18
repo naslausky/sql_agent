@@ -1,15 +1,7 @@
-from typing_extensions import Annotated, TypedDict
 from langgraph.graph import StateGraph, START
-from langchain_core.output_parsers import StrOutputParser
-from langchain_community.tools.sql_database.tool import QuerySQLDatabaseTool
-from langchain_core.prompts import ChatPromptTemplate
 from agents.sql_agent import create_sql_agent_with_safety, memoryConfig
 from prompts.prompts import Prompts
 from .sql_chat_bot_graph_state import SQLChatBotGraphState
-
-class QueryOutput(TypedDict):
-    """Generated SQL query."""
-    query: Annotated[str, "Syntactically valid SQL query."]
 
 class SQLChatBotGraph:
     """

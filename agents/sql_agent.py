@@ -1,7 +1,6 @@
 from langchain_community.agent_toolkits import SQLDatabaseToolkit
 from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import MemorySaver
-from langchain.agents.agent import RunnableAgent
 from langchain.tools import BaseTool
 from langchain_community.utilities import SQLDatabase
 from pydantic import Field

@@ -1,6 +1,5 @@
 from typing_extensions import Annotated, TypedDict
 from langgraph.graph import StateGraph, START
-from langchain_core.output_parsers import StrOutputParser
 from langchain_community.tools.sql_database.tool import QuerySQLDatabaseTool
 from langchain_core.prompts import ChatPromptTemplate
 from prompts.prompts import Prompts
@@ -66,7 +65,6 @@ class SQLQueryGraph:
         return {"answer": response.content}
 
     def is_query_blocked(state):
-        print(state.get('answer', 'abacaxi'))
         return "answer" in state and Prompts.unsafeMessage == state["answer"]
 
     def build_sql_graph(self):
