@@ -5,7 +5,7 @@ from langchain_community.tools.sql_database.tool import QuerySQLDatabaseTool
 from langchain_core.prompts import ChatPromptTemplate
 from agents.sql_agent import create_sql_agent_with_safety, memoryConfig
 from prompts.prompts import Prompts
-from .state import SQLChatBotGraphState
+from .sql_chat_bot_graph_state import SQLChatBotGraphState
 
 class QueryOutput(TypedDict):
     """Generated SQL query."""
@@ -50,13 +50,11 @@ class SQLChatBotGraph:
         return state
 
     def should_end_conversation(state):
-        return state.get("should_end", false)
+        return state.get("should_end", False)
 
     def build_sql_chatbot_graph(self):
         """Method to create the Chatbot Graph."""
-
         graph_builder = StateGraph(SQLChatBotGraphState)
-
         graph_builder.add_node("get_user_input", self.get_user_input)
         graph_builder.add_node("check_exit_intent", self.check_exit_intent)
         graph_builder.add_node("run_sql_agent", self.run_sql_agent)

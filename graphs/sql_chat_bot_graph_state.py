@@ -4,3 +4,5 @@ class SQLChatBotGraphState(TypedDict):
     should_end: bool
     user_input: str
     response: str
+
+initial_state = {"should_end": False, "user_input": "", "response": ""}
