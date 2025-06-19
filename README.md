@@ -1,7 +1,10 @@
 # SQL Agent
 > SQL Agent Inteligente utilizando Langflow e modelos de IA generativa.
 
-### Gif ilustrativo de funcionamento:
+### Gif ilustrativo de funcionamento:  
+_(Este gif conta apenas com os requisitos básicos. Abaixo uma print da execução com a memória persistente multisessão)_
+
+
 ![til](./docs/sql_agent.gif)
 
 ### Requisitos essenciais:
@@ -85,3 +88,5 @@
 - Rode o script principal: ```python3 main.py```
 
 ## 💻 Imagens da utilização
+- Memória persistente multisessão:
+![til](./docs/long_term_memory.jpg)
