@@ -27,7 +27,7 @@ _(Este gif conta apenas com os requisitos básicos. Abaixo uma print da execuç�
  - _"RAG (Retrieval-Augmented Generation): utilize o conteúdo do banco ou documentação como fonte adicional para gerar melhores queries"_:
      O agent já tem o acesso aos schemas e a base de dados conta com poucas tabelas. Em um projeto maior ou que envolvesse mais bases de dados, poderia ser feito montando os embeddings dos documentos.
  - _"Arquitetura MCP (Model Context Protocol): padronize o contexto compartilhado entre agentes para garantir coerência e escalabilidade"_:
-     Como é um projeto muito simples, o protocolo não fica tão explicito. Porém, toda a conversa está centralizada na estrutura de estado e o Agent possui conhecimento completo do acesso ao banco de dados.
+     Como é um projeto muito simples, o protocolo não fica tão explicito. Porém, toda a conversa está centralizada na estrutura de estado, que serve como o protocolo de padronização do contexto compartilhado entre os diferentes nós do grafo. Isso garante a coerência e a continuidade das interações.
  - _"Memória Persistente Multisessão: permita que os agentes mantenham o contexto de conversas passadas por usuário"_:
      Está implementado. Antes do início do fluxo, o sistema pergunta um id de usuário. Este id é a chave usada para armazenar na memória de longo termo. 
      Se este mesmo usuário entra novamente, o agente se lembra do que já foi conversado. Veja capturas de tela abaixo. A memória é armazenada no próprio banco de dados Postgres.
