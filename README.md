@@ -32,7 +32,7 @@ _(Este gif conta apenas com os requisitos básicos. Abaixo uma print da execuç�
      Está implementado. Antes do início do fluxo, o sistema pergunta um id de usuário. Este id é a chave usada para armazenar na memória de longo termo. 
      Se este mesmo usuário entra novamente, o agente se lembra do que já foi conversado. Veja capturas de tela abaixo. A memória é armazenada no próprio banco de dados Postgres.
  - _"Orquestração Multi-Agente com Papéis Diferentes: implemente múltiplos agentes especializados (ex: parser NLP, validador SQL, executor, formatador de resposta)"_:
-     Não foi feito. Existem nós que chamam modelos e tomam decisões mas não podem ser chamados de múltiplos agentes especializados. Neste caso, existe apenas o agente SQL.
+     Não foi feito. Existem nós que chamam modelos e tomam decisões mas não podem ser chamados de múltiplos agentes especializados. Neste sentido, existe apenas o agente SQL.
  - _"Observabilidade e Tracing: registre logs detalhados de interações, geração de query, execuções e eventuais erros, com visualização de métricas (ex: via OpenTelemetry)"_:
      Não foi implementado, mas como [a documentação](https://docs.smith.langchain.com/observability/how_to_guides/trace_langchain_with_otel) mostra, basta a instalação do pacote
      e a ativação do monitoramento com base na chave de API em uma variável de ambiente.
