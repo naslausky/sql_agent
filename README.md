@@ -42,16 +42,17 @@ _(Este gif conta apenas com os requisitos básicos. Abaixo uma print da execuç�
  - Instale os requisitos:
    ```pip install -r requirements.txt```
  - Adicione o seu arquivo oculto ```.env```. Segue o formato dele abaixo:
-   ```
+   ```   
    OPENAI_API_KEY= {APIKEY da OpenAI}
    POSTGRES_HOST={Endereço IP do servidor POSTGRESQL}
    POSTGRES_PORT={Porta do servidor POSTGRESQL}
    POSTGRES_USER={Usuario para acessar o BD}
+   POSTGRES_ADMIN_USER={Usuario para acessar o BD com permissões de criação de tabelas e escrita}
    POSTGRES_PASSWORD={Senha do usuario acima}
    POSTGRES_DB={Nome do BD}
     ```
  - Lembre-se de adicionar suas próprias informações ao arquivo mencionado acima.
- - O agente já contém seguranças contra validações, mas para correta orquestração, certifique-se que o usuário do POSTGRESQL tenha permissões de **somente leitura**.
+ - O agente já contém seguranças contra validações, mas para correta orquestração, certifique-se que o usuário simples do POSTGRESQL tenha permissões de **somente leitura**.
  - Certifique-se que o banco de dados contenha as tabelas corretas:
    ```sql
     -- Tabela de clientes
