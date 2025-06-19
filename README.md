@@ -1,5 +1,5 @@
 # SQL Agent
-> SQL Agent Inteligente utilizando Langflow e modelos de IA generativa.
+> SQL Agent Inteligente utilizando Langgraph e modelos de IA generativa.
 
 ### Gif ilustrativo de funcionamento:  
 _(Este gif conta apenas com os requisitos básicos. Abaixo uma print da execução com a memória persistente multisessão)_
