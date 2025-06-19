@@ -47,7 +47,7 @@ _(Este gif conta apenas com os requisitos básicos. Abaixo uma print da execuç�
    POSTGRES_HOST={Endereço IP do servidor POSTGRESQL}
    POSTGRES_PORT={Porta do servidor POSTGRESQL}
    POSTGRES_USER={Usuario para acessar o BD}
-   POSTGRES_ADMIN_USER={Usuario para acessar o BD com permissões de criação de tabelas e escrita}
+   POSTGRES_ADMIN_USER={(Para memória multi-sessão) Usuario para acessar o BD com permissões de criação de tabelas e escrita}
    POSTGRES_PASSWORD={Senha do usuario acima}
    POSTGRES_DB={Nome do BD}
     ```
