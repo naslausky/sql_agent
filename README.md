@@ -22,6 +22,21 @@ _(Este gif conta apenas com os requisitos básicos. Abaixo uma print da execuç�
          2) O prompt do agent instrui para não fazer nenhum tipo de query desta forma.
          3) Como última camada, o usuário de acesso ao banco de dados fornecido ao agente tem permissões de somente leitura.
 
+ ### Diferenciais / Adicionais Esperados:
+ Abaixo uma explicação sobre cada assunto:
+ - _"RAG (Retrieval-Augmented Generation): utilize o conteúdo do banco ou documentação como fonte adicional para gerar melhores queries"_:
+     O agent já tem o acesso aos schemas e a base de dados conta com poucas tabelas. Em um projeto maior ou que envolvesse mais bases de dados, poderia ser feito montando os embeddings dos documentos.
+ - _"Arquitetura MCP (Model Context Protocol): padronize o contexto compartilhado entre agentes para garantir coerência e escalabilidade"_:
+     Como é um projeto muito simples, o protocolo não fica tão explicito. Porém, toda a conversa está centralizada na estrutura de estado e o Agent possui conhecimento completo do acesso ao banco de dados.
+ - _"Memória Persistente Multisessão: permita que os agentes mantenham o contexto de conversas passadas por usuário"_:
+     Está implementado. Antes do início do fluxo, o sistema pergunta um id de usuário. Este id é a chave usada para armazenar na memória de longo termo. 
+     Se este mesmo usuário entra novamente, o agente se lembra do que já foi conversado. Veja capturas de tela abaixo. A memória é armazenada no próprio banco de dados Postgres.
+ - _"Orquestração Multi-Agente com Papéis Diferentes: implemente múltiplos agentes especializados (ex: parser NLP, validador SQL, executor, formatador de resposta)"_:
+     Não foi feito. Existem nós que chamam modelos e tomam decisões mas não podem ser chamados de múltiplos agentes especializados. Neste caso, existe apenas o agente SQL.
+ - _"Observabilidade e Tracing: registre logs detalhados de interações, geração de query, execuções e eventuais erros, com visualização de métricas (ex: via OpenTelemetry)"_:
+     Não fiz, mas não parece difícil de ser feito. Como [a documentação](https://docs.smith.langchain.com/observability/how_to_guides/trace_langchain_with_otel) mostra, basta a instação do pacote
+     e a ativação do monitoramento com base na chave de API em uma variável de ambiente.
+
 ### Como rodar:
  - Vá para a raiz do projeto.
  - Instale os requisitos:
