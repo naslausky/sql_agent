@@ -55,7 +55,7 @@ def create_sql_agent_with_safety(db, chat, store, checkpointer):
     toolkit = SQLDatabaseToolkit(db=db, llm=chat)
     original_tools = toolkit.get_tools()
     secure_query_tool = SecureSQLQueryTool(db=db)
-    safe_tools = [tool for tool in original_tools if tool.name != "query_sql_database"]
+    safe_tools = [tool for tool in original_tools if tool.name != "sql_db_query"]
     safe_tools.append(secure_query_tool)
     system_message = Prompts.sql_agent_system_message.format(
         dialect=db.dialect,
