@@ -101,7 +101,7 @@ _(Este gif conta apenas com os requisitos básicos. Abaixo uma print da execuç�
       (3, 5, '2024-05-06 16:30:00'),  -- Carla comprou um Mouse
       (1, 5, '2024-05-07 08:20:00');  -- Alice comprou outro Mouse
    ```
-- Caso deseje, altere as configurações de temperatura e modelo [aqui](./config/llm_settings.py)
+- Caso deseje, altere as configurações de temperatura e modelo [aqui](./config/llm_settings.py).
 - Rode o script principal: ```python3 main.py```
 
 ## 💻 Imagens da utilização
